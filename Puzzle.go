@@ -1,9 +1,5 @@
 package gosolve
 
-func Foo() int {
-	return 3
-}
-
 type Location struct {
 	p int8
 	o int8

@@ -4,7 +4,6 @@ import (
 	"fmt"
 )
 
-// type PruningTable map[Puzzle]int8
 type PruningTable struct {
 	max_depth int8
 	table     map[Puzzle]int8
