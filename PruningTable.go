@@ -18,7 +18,7 @@ func PTLookup(pt *PruningTable, p *Puzzle) int8 {
 	}
 }
 
-func dls(pt *PruningTable, p *Puzzle, depth int8, max_depth int8, move_set []Move) {
+func dls(pt *PruningTable, p *Puzzle, depth int8, max_depth int8, move_set *[]Move) {
 	if depth > 0 {
 		new_ps := p.ApplyMoves(move_set)
 		for _, new_p := range new_ps {
@@ -32,10 +32,10 @@ func dls(pt *PruningTable, p *Puzzle, depth int8, max_depth int8, move_set []Mov
 	}
 }
 
-func GetPruningTable(p Puzzle, max_depth int8, move_set []Move) PruningTable {
-	pt := PruningTable{max_depth, make(map[Puzzle]int8)}
+func GetPruningTable(p Puzzle, max_depth int8, move_set []Move, size_hint int) PruningTable {
+	pt := PruningTable{max_depth, make(map[Puzzle]int8, size_hint)}
 	for d := int8(0); d <= max_depth; d++ {
-		dls(&pt, &p, d, d, move_set)
+		dls(&pt, &p, d, d, &move_set)
 		fmt.Printf("Depth: %v: %v\n", d, len(pt.table))
 	}
 	return pt

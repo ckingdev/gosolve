@@ -75,20 +75,20 @@ func GetSolvedPuzzle() Puzzle {
 	return p
 }
 
-func (p *Puzzle) Apply(m Move) Puzzle {
+func (p *Puzzle) Apply(m *Move) Puzzle {
 	var new_p Puzzle
 	for i := 0; i < 8; i++ {
-		tmp := m[p[i].loc.p]
+		tmp := (*m)[p[i].loc.p]
 		new_p[i].loc = Location{tmp.p, (tmp.o + p[i].loc.o) % 3}
 		new_p[i].id = p[i].id
 	}
 	return new_p
 }
 
-func (p *Puzzle) ApplyMoves(move_set []Move) []Puzzle {
-	applied_ps := make([]Puzzle, len(move_set))
-	for i, move := range move_set {
-		applied_ps[i] = p.Apply(move)
+func (p *Puzzle) ApplyMoves(move_set *[]Move) []Puzzle {
+	applied_ps := make([]Puzzle, len(*move_set))
+	for i, move := range *move_set {
+		applied_ps[i] = p.Apply(&move)
 	}
 	return applied_ps
 }
