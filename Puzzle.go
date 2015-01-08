@@ -59,9 +59,9 @@ func get_base_moves() [3]Move {
 	return base_moves
 }
 
-func GetHTMMoves() [9]Move {
+func GetHTMMoves() []Move {
 	base_moves := get_base_moves()
-	var htm_moves [9]Move
+	htm_moves := make([]Move, 9)
 	for i := 0; i < 3; i++ {
 		htm_moves[i*3] = base_moves[i]
 		htm_moves[i*3+1] = compose(base_moves[i], base_moves[i])
