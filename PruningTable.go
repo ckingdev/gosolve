@@ -9,7 +9,7 @@ type PruningTable struct {
 	table     map[Puzzle]int8
 }
 
-func PTLookup(pt *PruningTable, p *Puzzle) int8 {
+func (pt *PruningTable) Lookup(p *Puzzle) int8 {
 	val, ok := pt.table[*p]
 	if ok {
 		return val

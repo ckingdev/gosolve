@@ -48,7 +48,7 @@ func TestPTLookup(t *testing.T) {
 	solved := GetSolvedPuzzle()
 	htm := GetHTMMoves()
 	pt := GetPruningTable(solved, 2, htm, 100)
-	solved_depth := PTLookup(&pt, &solved)
+	solved_depth := pt.Lookup(&solved)
 	if solved_depth != 0 {
 		t.Fatalf("Solved puzzle has depth %v, expected 0.", solved_depth)
 	}
@@ -56,7 +56,7 @@ func TestPTLookup(t *testing.T) {
 	depth4 = depth4.Apply(&htm[3])
 	depth4 = depth4.Apply(&htm[6])
 	depth4 = depth4.Apply(&htm[0])
-	depth4_depth := PTLookup(&pt, &depth4)
+	depth4_depth := pt.Lookup(&depth4)
 	if depth4_depth != 3 {
 		t.Fatalf("Incorrect depth for puzzle not in table, got %v, expected %v.", depth4_depth, 3)
 	}
