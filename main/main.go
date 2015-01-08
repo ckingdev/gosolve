@@ -7,5 +7,5 @@ import (
 func main() {
 	htm := gosolve.GetHTMMoves()
 	p := gosolve.GetSolvedPuzzle()
-	_ = gosolve.GetPruningTable(p, 7, htm)
+	_ = gosolve.GetPruningTable(p, 7, htm, 3000000)
 }
