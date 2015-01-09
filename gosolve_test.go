@@ -62,6 +62,25 @@ func TestPTLookup(t *testing.T) {
 	}
 }
 
+func TestIDAStar(t *testing.T) {
+	solved := GetSolvedPuzzle()
+	htm := GetHTMMoves()
+	pt := GetPruningTable(solved, 6, htm, 62360)
+	p := solved.Apply(&htm[1])
+	p = p.Apply(&htm[4])
+	p = p.Apply(&htm[1])
+	sols := IDA_Star(&pt, &p, &htm, 2, 4)
+	expected := [][]int8{[]int8{1, 4, 1}, []int8{4, 1, 4}}
+	for i := 0; i < 2; i++ {
+		for j := 0; j < 3; j++ {
+			if sols[i][j] != expected[i][j] {
+				t.Fatal("Incorrect solutions for R2 U2 R2.")
+			}
+		}
+	}
+
+}
+
 func BenchmarkGetPruningTable(b *testing.B) {
 	htm := GetHTMMoves()
 	p := GetSolvedPuzzle()
