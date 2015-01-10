@@ -89,6 +89,9 @@ func TestPriorityQueueInsert(t *testing.T) {
 	pq.Insert(n, 3)
 	pq.Insert(n, 2)
 	pq.Insert(n, 0)
+	if pq.size != 4 {
+		t.Fatalf("Incorrect size after inserting 4 elements. Got %v", pq.size)
+	}
 	if pq.queue[0].priority != 3 {
 		t.Fatalf("Incorrect pq element 0. Expected p 3, got p %v",
 			pq.queue[0].priority)
