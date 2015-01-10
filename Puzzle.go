@@ -1,19 +1,29 @@
+// gosolve provides functionality to work with 2x2 puzzles.
+// Puzzle, move, and pruning table generation and manipulation are currently
+// implemented, as is searching for solved states with IDA*.
 package gosolve
 
+// Location encodes a position of a piece, in terms of its permutation p and
+// orientation o.
 type Location struct {
 	p int8
 	o int8
 }
 
+// Piece encodes a piece, in terms of its id (essentially, where the piece
+// should be while solved) and its location (where it is currently).
 type Piece struct {
 	id  int8
 	loc Location
 }
 
+// Puzzle is a collection of 8 pieces.
 type Puzzle [8]Piece
 
+// Move is a map of id -> permutation & twist.
 type Move [8]Location
 
+// NewMove returns the identity Move.
 func NewMove() Move {
 	var m Move
 	for i := 0; i < 8; i++ {
@@ -22,6 +32,7 @@ func NewMove() Move {
 	return m
 }
 
+// Compose
 func compose(a Move, b Move) Move {
 	ab := NewMove()
 	for i := 0; i < 8; i++ {

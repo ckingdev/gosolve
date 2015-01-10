@@ -81,11 +81,78 @@ func TestIDAStar(t *testing.T) {
 
 }
 
+func TestPriorityQueueInsert(t *testing.T) {
+	p := GetSolvedPuzzle()
+	n := Node{p, []int{0, 0, 0, 0}}
+	pq := NewPriorityQueue()
+	pq.Insert(n, 1)
+	pq.Insert(n, 3)
+	pq.Insert(n, 2)
+	pq.Insert(n, 0)
+	if pq.queue[0].priority != 3 {
+		t.Fatalf("Incorrect pq element 0. Expected p 3, got p %v",
+			pq.queue[0].priority)
+	}
+	if pq.queue[1].priority != 2 {
+		t.Fatalf("Incorrect pq element 1. Expected p 3, got p %v",
+			pq.queue[1].priority)
+	}
+	if pq.queue[2].priority != 1 {
+		t.Fatalf("Incorrect pq element 2. Expected p 3, got p %v",
+			pq.queue[2].priority)
+	}
+}
+
+func TestPriorityQueuePop(t *testing.T) {
+	p := GetSolvedPuzzle()
+	n := Node{p, []int{0, 0, 0, 0}}
+	pq := NewPriorityQueue()
+	pq.Insert(n, 1)
+	pq.Insert(n, 3)
+	pq.Insert(n, 2)
+	_ = pq.Pop()
+	if pq.size != 2 {
+		t.Fatalf("Incorrect size after popping 1 element. Expected 2, got %v",
+			pq.size)
+	}
+	_ = pq.Pop()
+	if pq.size != 1 {
+		t.Fatalf("Incorrect size after popping 1 element. Expected 1, got %v",
+			pq.size)
+	}
+	_ = pq.Pop()
+	if pq.size != 0 {
+		t.Fatalf("Incorrect size after popping 1 element. Expected 0, got %v",
+			pq.size)
+	}
+}
+
+func TestPriorityQueueEmptyFull(t *testing.T) {
+	p := GetSolvedPuzzle()
+	n := Node{p, []int{0, 0, 0, 0}}
+	pq := NewPriorityQueue()
+	if pq.IsFull() {
+		t.Fatal("Queue is empty but IsFull returned true.")
+	}
+	if !pq.IsEmpty() {
+		t.Fatal("Queue is empty but IsEmpty returned false.")
+	}
+	for i := int8(0); i < MAX_PQ_SIZE; i++ {
+		pq.Insert(n, i)
+	}
+	if pq.IsEmpty() {
+		t.Fatal("Queue is not empty but IsEmpty returned true.")
+	}
+	if !pq.IsFull() {
+		t.Fatal("Queue is full but IsFull returned false.")
+	}
+}
+
 func BenchmarkGetPruningTable(b *testing.B) {
 	htm := GetHTMMoves()
 	p := GetSolvedPuzzle()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = GetPruningTable(p, 6, htm, 62360)
+		_ = GetPruningTable(p, 7, htm, 289896)
 	}
 }
