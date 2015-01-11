@@ -48,17 +48,17 @@ func TestPTLookup(t *testing.T) {
 	solved := GetSolvedPuzzle()
 	htm := GetHTMMoves()
 	pt := GetPruningTable(solved, 2, htm, 100)
-	solved_depth := pt.Lookup(&solved)
-	if solved_depth != 0 {
-		t.Fatalf("Solved puzzle has depth %v, expected 0.", solved_depth)
+	solvedDepth := pt.Lookup(&solved)
+	if solvedDepth != 0 {
+		t.Fatalf("Solved puzzle has depth %v, expected 0.", solvedDepth)
 	}
 	depth4 := solved.Apply(&htm[0])
 	depth4 = depth4.Apply(&htm[3])
 	depth4 = depth4.Apply(&htm[6])
 	depth4 = depth4.Apply(&htm[0])
-	depth4_depth := pt.Lookup(&depth4)
-	if depth4_depth != 3 {
-		t.Fatalf("Incorrect depth for puzzle not in table, got %v, expected %v.", depth4_depth, 3)
+	depth4Depth := pt.Lookup(&depth4)
+	if depth4Depth != 3 {
+		t.Fatalf("Incorrect depth for puzzle not in table, got %v, expected %v.", depth4Depth, 3)
 	}
 }
 
@@ -69,7 +69,7 @@ func TestIDAStar(t *testing.T) {
 	p := solved.Apply(&htm[1])
 	p = p.Apply(&htm[4])
 	p = p.Apply(&htm[1])
-	sols := IDA_Star(&pt, &p, &htm, 2, 4)
+	sols := IDAStar(&pt, &p, &htm, 2, 4)
 	expected := [][]int8{[]int8{1, 4, 1}, []int8{4, 1, 4}}
 	for i := 0; i < 2; i++ {
 		for j := 0; j < 3; j++ {
@@ -140,7 +140,7 @@ func TestPriorityQueueEmptyFull(t *testing.T) {
 	if !pq.IsEmpty() {
 		t.Fatal("Queue is empty but IsEmpty returned false.")
 	}
-	for i := int8(0); i < MAX_PQ_SIZE; i++ {
+	for i := int8(0); i < maxPQSize; i++ {
 		pq.Insert(n, i)
 	}
 	if pq.IsEmpty() {

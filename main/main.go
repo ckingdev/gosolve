@@ -1,17 +1,21 @@
 package main
 
 import (
-	"fmt"
+	// "encoding/binary"
+	// "fmt"
+	// "reflect"
+
 	"github.com/cpalone/gosolve"
 )
 
 func main() {
-	htm := gosolve.GetHTMMoves()
 	p := gosolve.GetSolvedPuzzle()
-	pt := gosolve.GetPruningTable(p, 6, htm, 3000000)
-	p = p.Apply(&htm[1])
-	p = p.Apply(&htm[4])
-	p = p.Apply(&htm[1])
-	sols := gosolve.IDA_Star(&pt, &p, &htm, 2, 4)
-	fmt.Println(sols)
+	n := gosolve.Node{p, []int{0, 0, 0, 0}}
+	pq := gosolve.NewPriorityQueue()
+	pq.Insert(n, 1)
+	pq.Insert(n, 3)
+	pq.Insert(n, 2)
+	pq.PrintElement(0)
+	pq.PrintElement(1)
+	pq.PrintElement(2)
 }

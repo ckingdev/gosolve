@@ -1,4 +1,4 @@
-// gosolve provides functionality to work with 2x2 puzzles.
+// Package gosolve provides functionality to work with 2x2 puzzles.
 // Puzzle, move, and pruning table generation and manipulation are currently
 // implemented, as is searching for solved states with IDA*.
 package gosolve
@@ -32,7 +32,6 @@ func NewMove() Move {
 	return m
 }
 
-// Compose
 func compose(a Move, b Move) Move {
 	ab := NewMove()
 	for i := 0; i < 8; i++ {
@@ -44,40 +43,42 @@ func compose(a Move, b Move) Move {
 	return ab
 }
 
-func get_base_moves() [3]Move {
-	var base_moves [3]Move
+func getBaseMoves() [3]Move {
+	var baseMoves [3]Move
 	for i := 0; i < 3; i++ {
-		base_moves[i] = NewMove()
+		baseMoves[i] = NewMove()
 	}
-	base_moves[0][0] = Location{3, 1}
-	base_moves[0][3] = Location{7, 2}
-	base_moves[0][7] = Location{4, 1}
-	base_moves[0][4] = Location{0, 2}
+	baseMoves[0][0] = Location{3, 1}
+	baseMoves[0][3] = Location{7, 2}
+	baseMoves[0][7] = Location{4, 1}
+	baseMoves[0][4] = Location{0, 2}
 
-	base_moves[1][2] = Location{3, 0}
-	base_moves[1][3] = Location{0, 0}
-	base_moves[1][0] = Location{1, 0}
-	base_moves[1][1] = Location{2, 0}
+	baseMoves[1][2] = Location{3, 0}
+	baseMoves[1][3] = Location{0, 0}
+	baseMoves[1][0] = Location{1, 0}
+	baseMoves[1][1] = Location{2, 0}
 
-	base_moves[2][1] = Location{0, 1}
-	base_moves[2][0] = Location{4, 2}
-	base_moves[2][4] = Location{5, 1}
-	base_moves[2][5] = Location{1, 2}
-	return base_moves
+	baseMoves[2][1] = Location{0, 1}
+	baseMoves[2][0] = Location{4, 2}
+	baseMoves[2][4] = Location{5, 1}
+	baseMoves[2][5] = Location{1, 2}
+	return baseMoves
 }
 
+// GetHTMMoves returns a slice of the moves in <R, U, F> in half-turn metric.
 func GetHTMMoves() []Move {
-	base_moves := get_base_moves()
-	htm_moves := make([]Move, 9)
+	baseMoves := getBaseMoves()
+	htmMoves := make([]Move, 9)
 	for i := 0; i < 3; i++ {
-		htm_moves[i*3] = base_moves[i]
-		htm_moves[i*3+1] = compose(base_moves[i], base_moves[i])
-		htm_moves[i*3+2] = compose(base_moves[i], htm_moves[i*3+1])
+		htmMoves[i*3] = baseMoves[i]
+		htmMoves[i*3+1] = compose(baseMoves[i], baseMoves[i])
+		htmMoves[i*3+2] = compose(baseMoves[i], htmMoves[i*3+1])
 
 	}
-	return htm_moves
+	return htmMoves
 }
 
+// GetSolvedPuzzle returns a solved Puzzle.
 func GetSolvedPuzzle() Puzzle {
 	var p Puzzle
 	for i := 0; i < 8; i++ {
@@ -86,24 +87,37 @@ func GetSolvedPuzzle() Puzzle {
 	return p
 }
 
+// Apply applies a Move to a Puzzle and returns the result.
 func (p *Puzzle) Apply(m *Move) Puzzle {
-	var new_p Puzzle
+	var newP Puzzle
 	for i := 0; i < 8; i++ {
 		tmp := (*m)[p[i].loc.p]
-		new_p[i].loc = Location{tmp.p, (tmp.o + p[i].loc.o) % 3}
-		new_p[i].id = p[i].id
+		newP[i].loc = Location{tmp.p, (tmp.o + p[i].loc.o) % 3}
+		newP[i].id = p[i].id
 	}
-	return new_p
+	return newP
 }
 
-func (p *Puzzle) ApplyMoves(move_set *[]Move) []Puzzle {
-	applied_ps := make([]Puzzle, len(*move_set))
-	for i, move := range *move_set {
-		applied_ps[i] = p.Apply(&move)
+// ApplyMoves returns a slice of the Puzzles resulting from applying each
+// move to the Puzzle independently.
+func (p *Puzzle) ApplyMoves(moveSet *[]Move) []Puzzle {
+	appliedPs := make([]Puzzle, len(*moveSet))
+	for i, move := range *moveSet {
+		appliedPs[i] = p.Apply(&move)
 	}
-	return applied_ps
+	return appliedPs
 }
 
+// ApplySequence applies a given sequence of moves to a Puzzle in series.
+func (p *Puzzle) ApplySequence(moves []int, moveSet *[]Move) Puzzle {
+	newP := *p
+	for i := range moves {
+		newP = newP.Apply(&(*moveSet)[i])
+	}
+	return newP
+}
+
+// IsSolved returns true if the Puzzle is solved, otherwise false.
 func (p *Puzzle) IsSolved() bool {
 	for i := 0; i < 8; i++ {
 		if p[i].loc.p != p[i].id || p[i].loc.o != 0 {
