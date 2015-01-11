@@ -40,3 +40,7 @@ func GetPruningTable(p Puzzle, max_depth int8, move_set []Move, size_hint int) P
 	}
 	return pt
 }
+
+func (pt *PruningTable) GetNumEntries() int {
+	return len(pt.table)
+}
